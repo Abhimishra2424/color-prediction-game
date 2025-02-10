@@ -7,8 +7,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import GameHome from "./pages/GameHome";
 import WinHistory from "./pages/WinHistory";
-import Profile from "./pages/Profile";
-
+import ProfilePage from "./pages/ProfilePage";
+import AddMoney from "./pages/AddMoney";
+import Withdraw from "./pages/Withdraw";
+import UpdatePassword from "./pages/UpdatePassword";
 
 const App = () => {
   return (
@@ -23,7 +25,11 @@ const App = () => {
           <Route element={<Layout />}>
             <Route path="/" element={<PrivateRoute><GameHome /></PrivateRoute>} />
             <Route path="/win" element={<PrivateRoute><WinHistory /></PrivateRoute>} />
-            <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+            <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+
+            <Route path="/add-money" element={<PrivateRoute><AddMoney /></PrivateRoute>} />
+            <Route path="/withdraw" element={<PrivateRoute><Withdraw /></PrivateRoute>} />
+            <Route path="/update-password" element={<PrivateRoute><UpdatePassword /></PrivateRoute>} />
           </Route>
         </Routes>
       </Router>
