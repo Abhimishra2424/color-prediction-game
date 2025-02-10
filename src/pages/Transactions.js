@@ -1,92 +1,67 @@
-import React, { useState } from "react";
-import { Container, Typography, Box, Button, Grid, Card, CardContent, List, ListItem, ListItemText, Chip } from "@mui/material";
+import React from "react";
+import { Container, Typography, Box, List, ListItem, ListItemText, Chip } from "@mui/material";
+import { Link } from "react-router-dom";
+import { MdArrowBack } from "react-icons/md";
 
 function Transactions() {
-  const [viewType, setViewType] = useState("card"); // Toggle between 'card' and 'list'
-
   // Dummy Transaction Data
   const transactions = [
     { txnNo: "TXN12345", type: "Debit", amount: 1500 },
     { txnNo: "TXN67890", type: "Credit", amount: 2000 },
     { txnNo: "TXN54321", type: "Debit", amount: 500 },
     { txnNo: "TXN98765", type: "Credit", amount: 3500 },
-    { txnNo: "TXN11122", type: "Debit", amount: 1200 },
-    { txnNo: "TXN22233", type: "Credit", amount: 4500 },
-    { txnNo: "TXN33344", type: "Debit", amount: 700 },
-    { txnNo: "TXN44455", type: "Credit", amount: 3900 },
+    { txnNo: "TXN98765", type: "Credit", amount: 3500 },
+    { txnNo: "TXN98765", type: "Credit", amount: 3500 },
   ];
+
+  // Calculate Total Balance
+  const totalBalance = transactions.reduce((acc, txn) => {
+    return txn.type === "Credit" ? acc + txn.amount : acc - txn.amount;
+  }, 0);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
-      {/* Page Title & Toggle View Button (Fixed Section) */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h5" fontWeight="bold">Transactions</Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setViewType(viewType === "card" ? "list" : "card")}
-        >
-          {viewType === "card" ? "List View" : "Card View"}
-        </Button>
+      {/* 🔙 Back Navigation */}
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+        <Link to="/profile" style={{ textDecoration: "none", color: "inherit" }}>
+          <MdArrowBack size={28} />
+        </Link>
+        <Typography variant="h6" sx={{ ml: 2, fontWeight: "bold" }}>Transactions</Typography>
       </Box>
 
-      {/* Scrollable Transaction Section */}
+      {/* 💰 Total Balance Section */}
       <Box
         sx={{
-          maxHeight: "400px", // Limit height for scrollable area
-          overflowY: "auto", // Enable vertical scrolling
+          mb: 2,
+          p: 2,
           borderRadius: 2,
           boxShadow: 2,
-          p: 2,
-          bgcolor: "#f9f9f9",
+          bgcolor: "#f0f0f0",
+          textAlign: "center",
         }}
       >
-        {/* Card View */}
-        {viewType === "card" ? (
-          <Grid container spacing={2}>
-            {transactions.map((txn, index) => (
-              <Grid item xs={12} key={index}>
-                <Card sx={{ boxShadow: 2 }}>
-                  <CardContent>
-                    <Typography variant="body1"><strong>Txn No:</strong> {txn.txnNo}</Typography>
-                    <Typography variant="body1">
-                      <strong>Type:</strong>{" "}
-                      <Chip
-                        label={txn.type}
-                        sx={{
-                          bgcolor: txn.type === "Debit" ? "green" : "red",
-                          color: "white",
-                          fontWeight: "bold",
-                        }}
-                      />
-                    </Typography>
-                    <Typography variant="body1"><strong>Amount:</strong> ₹{txn.amount}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          // List View
-          <List>
-            {transactions.map((txn, index) => (
-              <ListItem key={index} divider>
-                <ListItemText
-                  primary={`Txn No: ${txn.txnNo}`}
-                  secondary={`Amount: ₹${txn.amount}`}
-                />
-                <Chip
-                  label={txn.type}
-                  sx={{
-                    bgcolor: txn.type === "Debit" ? "green" : "red",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        )}
+        <Typography variant="h6" fontWeight="bold">
+          Total Balance: ₹{totalBalance.toLocaleString()}
+        </Typography>
+      </Box>
+
+      {/* 📜 Transactions List */}
+      <Box sx={{ maxHeight: "400px", overflowY: "auto", borderRadius: 2, boxShadow: 2, p: 2, bgcolor: "#f9f9f9" }}>
+        <List>
+          {transactions.map((txn, index) => (
+            <ListItem key={index} divider>
+              <ListItemText primary={`Txn No: ${txn.txnNo}`} secondary={`Amount: ₹${txn.amount}`} />
+              <Chip
+                label={txn.type}
+                sx={{
+                  bgcolor: txn.type === "Debit" ? "red" : "green",
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
       </Box>
     </Container>
   );
