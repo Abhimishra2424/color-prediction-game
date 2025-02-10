@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Box, Typography, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
-import { MdAttachMoney, MdOutlineLock, MdMoneyOff, MdAccountCircle, MdArrowBack } from "react-icons/md"; // Icons
+import { MdAttachMoney, MdOutlineLock, MdMoneyOff, MdAccountCircle, MdArrowBack, MdReceipt } from "react-icons/md"; // Icons
 
 function ProfilePage() {
   const userName = "John Doe"; // Replace with actual user data
@@ -11,6 +11,7 @@ function ProfilePage() {
     { name: "Add Money", icon: <MdAttachMoney size={24} />, path: "/add-money" },
     { name: "Withdraw", icon: <MdMoneyOff size={24} />, path: "/withdraw" },
     { name: "Update Password", icon: <MdOutlineLock size={24} />, path: "/update-password" },
+    { name: "Transaction", icon: <MdReceipt size={24} />, path: "/transactions" }, // New Transaction Menu
   ];
 
   return (
@@ -20,7 +21,7 @@ function ProfilePage() {
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
           <MdArrowBack size={28} />
         </Link>
-        <Typography variant="h6" sx={{ ml: 2 }}>Home</Typography>
+        <Typography variant="h6" sx={{ ml: 2, fontWeight: "bold" }}>Home</Typography>
       </Box>
 
       {/* User Info */}
@@ -30,7 +31,7 @@ function ProfilePage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          bgcolor: "#222",
+          bgcolor: "#1976D2",
           color: "white",
           borderRadius: 2,
           mb: 2,

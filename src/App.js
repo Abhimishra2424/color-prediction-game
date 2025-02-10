@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AddMoney from "./pages/AddMoney";
 import Withdraw from "./pages/Withdraw";
 import UpdatePassword from "./pages/UpdatePassword";
+import Transaction from "./pages/Transactions";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/add-money" element={<PrivateRoute><AddMoney /></PrivateRoute>} />
             <Route path="/withdraw" element={<PrivateRoute><Withdraw /></PrivateRoute>} />
             <Route path="/update-password" element={<PrivateRoute><UpdatePassword /></PrivateRoute>} />
+            <Route path="/transactions" element={<PrivateRoute><Transaction /></PrivateRoute>} />
           </Route>
         </Routes>
       </Router>
