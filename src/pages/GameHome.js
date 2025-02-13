@@ -14,21 +14,32 @@ import {
   TablePagination,
 } from "@mui/material";
 import { MdOutlineSportsEsports, MdTimer } from "react-icons/md"; // Icons
+import { useRound } from "../context/RoundContext"; // Import the context
 
 function GameHome() {
-  const [currentRound, setCurrentRound] = useState(1);
+  const { currentRound } = useRound();
+
+  console.log('currentRound', currentRound)
   const [timeLeft, setTimeLeft] = useState(60);
+
   const [gameHistory, setGameHistory] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage] = useState(5);
 
   // Timer Countdown
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 60));
+    if (!currentRound) return;
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      const endTime = new Date(currentRound.end_time);
+      const diff = Math.floor((endTime - now) / 1000);
+
+      setTimeLeft(diff > 0 ? diff : 0);
     }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+
+    return () => clearInterval(interval);
+  }, [currentRound]);
 
   // Mock Game History Data
   useEffect(() => {
@@ -59,7 +70,7 @@ function GameHome() {
           variant="h6"
           sx={{ display: "flex", alignItems: "center", fontSize: { xs: 16, md: 20 } }}
         >
-          <MdOutlineSportsEsports size={24} style={{ marginRight: 8 }} /> Round: {currentRound}
+          <MdOutlineSportsEsports size={24} style={{ marginRight: 8 }} /> Round: {currentRound?.round_no || "N/A"}
         </Typography>
         <Typography
           variant="h6"

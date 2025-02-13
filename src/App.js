@@ -12,28 +12,31 @@ import Withdraw from "./pages/Withdraw";
 import UpdatePassword from "./pages/UpdatePassword";
 import Transaction from "./pages/Transactions";
 import { AuthProvider } from "./context/AuthContext";
+import { RoundProvider } from "./context/RoundContext";
 
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          {/* ✅ Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+      <RoundProvider>
+        <Router>
+          <Routes>
+            {/* ✅ Public Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* ✅ Protected Routes with Layout */}
-          <Route element={<Layout />}>
-            <Route path="/" element={<PrivateRoute><GameHome /></PrivateRoute>} />
-            <Route path="/win" element={<PrivateRoute><WinHistory /></PrivateRoute>} />
-            <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
-            <Route path="/add-money" element={<PrivateRoute><AddMoney /></PrivateRoute>} />
-            <Route path="/withdraw" element={<PrivateRoute><Withdraw /></PrivateRoute>} />
-            <Route path="/update-password" element={<PrivateRoute><UpdatePassword /></PrivateRoute>} />
-            <Route path="/transactions" element={<PrivateRoute><Transaction /></PrivateRoute>} />
-          </Route>
-        </Routes>
-      </Router>
+            {/* ✅ Protected Routes with Layout */}
+            <Route element={<Layout />}>
+              <Route path="/" element={<PrivateRoute><GameHome /></PrivateRoute>} />
+              <Route path="/win" element={<PrivateRoute><WinHistory /></PrivateRoute>} />
+              <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+              <Route path="/add-money" element={<PrivateRoute><AddMoney /></PrivateRoute>} />
+              <Route path="/withdraw" element={<PrivateRoute><Withdraw /></PrivateRoute>} />
+              <Route path="/update-password" element={<PrivateRoute><UpdatePassword /></PrivateRoute>} />
+              <Route path="/transactions" element={<PrivateRoute><Transaction /></PrivateRoute>} />
+            </Route>
+          </Routes>
+        </Router>
+      </RoundProvider>
     </AuthProvider>
   );
 };
