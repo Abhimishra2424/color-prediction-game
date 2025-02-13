@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, Button, Container, Typography, Box, Alert } from "@mui/material";
 import { useAuth } from "../context/AuthContext"; // Import Auth Context
 import { useNavigate } from "react-router-dom";
 
 function Register() {
-  const { registerUser, error } = useAuth(); // Get registerUser function & error from context
+  const { registerUser, error , user } = useAuth(); // Get registerUser function & error from context
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [successMessage, setSuccessMessage] = useState("");
@@ -21,6 +21,12 @@ function Register() {
       setTimeout(() => navigate("/login"), 2000);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [user, navigate])
 
   return (
     <Container maxWidth="sm">

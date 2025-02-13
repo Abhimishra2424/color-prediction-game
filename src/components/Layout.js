@@ -6,6 +6,8 @@ import BottomNav from "./BottomNav";
 const Layout = () => {
   const { user } = useAuth(); // ✅ Properly fetching user
 
+  console.log('user', user)
+
   return (
     <div>
       {/* ✅ Main Content */}

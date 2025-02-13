@@ -55,17 +55,21 @@ export const AuthProvider = ({ children }) => {
     const loginUser = async (email, password) => {
         try {
             const res = await axios.post("http://localhost:5000/api/users/login", { email, password });
-
+    
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("user", JSON.stringify({ email })); // Storing user email
-
+    
             dispatch({ 
                 type: "LOGIN_SUCCESS", 
                 payload: { user: { email }, token: res.data.token } 
             });
-
+    
+            return { success: true ,  message: res.data.message}; // ✅ Success response return kar rahe hain
+    
         } catch (error) {
-            dispatch({ type: "LOGIN_ERROR", payload: error.response?.data?.message || "Login failed" });
+            const errorMessage = error.response?.data?.message || "Login failed";
+            dispatch({ type: "LOGIN_ERROR", payload: errorMessage });
+            return { success: false, message: errorMessage }; // ❌ Error response return kar rahe hain
         }
     };
 

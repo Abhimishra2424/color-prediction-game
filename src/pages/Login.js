@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -9,15 +9,18 @@ import {
   FormControl,
   InputLabel,
   Box,
+  Alert,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useAuth } from "../context/AuthContext"; // Import useAuth
 
 function Login() {
-  const { loginUser } = useAuth(); // Get login function from AuthContext
+  const { loginUser , user} = useAuth(); // Get login function from AuthContext
+  const navigate = useNavigate(); // Initialize useNavigate
   const [loginType, setLoginType] = useState("email");
   const [form, setForm] = useState({ identifier: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [alert, setAlert] = useState({ type: "", msg: "" });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,16 +33,33 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setAlert({ type: "", msg: "" }); // Reset alert
 
-    const success = await loginUser(form.identifier, form.password);
+    const result = await loginUser(form.identifier, form.password); // ✅ Wait for the result
 
-    if (!success) {
-      setError("Invalid credentials. Please try again.");
+    if (result.success) {
+      setAlert({ type: "success", msg: result.message });
+
+      // Redirect to / is called HomeGame page after a short delay
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+      
+    } else {
+      setAlert({ type: "error", msg: result.message });
     }
 
     setLoading(false);
+
+    // Hide alert after 3 seconds
+    setTimeout(() => setAlert({ type: "", msg: "" }), 3000);
   };
+
+    useEffect(() => {
+      if (user) {
+        navigate('/')
+      }
+    }, [user, navigate])
 
   return (
     <Container maxWidth="sm">
@@ -51,6 +71,13 @@ function Login() {
           Login
         </Typography>
       </Box>
+
+      {alert.msg && (
+        <Alert severity={alert.type} sx={{ mb: 2, textAlign: "center" }}>
+          {alert.msg}
+        </Alert>
+      )}
+
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -86,11 +113,6 @@ function Login() {
           variant="outlined"
           onChange={handleChange}
         />
-        {error && (
-          <Typography color="error" textAlign="center">
-            {error}
-          </Typography>
-        )}
         <Button type="submit" variant="contained" color="primary" size="large" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </Button>
