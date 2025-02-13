@@ -1,16 +1,25 @@
 import React, { useState } from "react";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import { TextField, Button, Container, Typography, Box, Alert } from "@mui/material";
+import { useAuth } from "../context/AuthContext"; // Import Auth Context
+import { useNavigate } from "react-router-dom";
 
 function Register() {
-  const [form, setForm] = useState({ email: "", phone: "", password: "" });
+  const { registerUser, error } = useAuth(); // Get registerUser function & error from context
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    const success = await registerUser(form.username, form.email, form.password);
+    if (success) {
+      setSuccessMessage("Registration successful! Redirecting...");
+      setTimeout(() => navigate("/login"), 2000);
+    }
   };
 
   return (
@@ -23,6 +32,10 @@ function Register() {
           Register
         </Typography>
       </Box>
+      
+      {error && <Alert severity="error">{error}</Alert>}
+      {successMessage && <Alert severity="success">{successMessage}</Alert>}
+
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -37,18 +50,21 @@ function Register() {
         }}
       >
         <TextField
-          label="Email"
-          name="email"
+          label="Username"
+          name="username"
           fullWidth
           variant="outlined"
           onChange={handleChange}
+          required
         />
         <TextField
-          label="Phone Number"
-          name="phone"
+          label="Email"
+          name="email"
+          type="email"
           fullWidth
           variant="outlined"
           onChange={handleChange}
+          required
         />
         <TextField
           label="Password"
@@ -57,6 +73,7 @@ function Register() {
           fullWidth
           variant="outlined"
           onChange={handleChange}
+          required
         />
         <Button type="submit" variant="contained" color="primary" size="large">
           Register

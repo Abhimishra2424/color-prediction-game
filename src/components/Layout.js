@@ -4,15 +4,14 @@ import { useAuth } from "../context/AuthContext";
 import BottomNav from "./BottomNav";
 
 const Layout = () => {
-  // const { user } = useAuth();
-  let user = true
+  const { user } = useAuth(); // ✅ Properly fetching user
 
   return (
     <div>
-      {/* Main Content */}
+      {/* ✅ Main Content */}
       <Outlet />
 
-      {/* Show Bottom Navigation if user is logged in */}
+      {/* ✅ Show Bottom Navigation only if user is logged in */}
       {user && <BottomNav />}
     </div>
   );

@@ -10,10 +10,14 @@ import {
   InputLabel,
   Box,
 } from "@mui/material";
+import { useAuth } from "../context/AuthContext"; // Import useAuth
 
 function Login() {
+  const { loginUser } = useAuth(); // Get login function from AuthContext
   const [loginType, setLoginType] = useState("email");
   const [form, setForm] = useState({ identifier: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,9 +27,18 @@ function Login() {
     setLoginType(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    setLoading(true);
+    setError("");
+
+    const success = await loginUser(form.identifier, form.password);
+
+    if (!success) {
+      setError("Invalid credentials. Please try again.");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -73,8 +86,13 @@ function Login() {
           variant="outlined"
           onChange={handleChange}
         />
-        <Button type="submit" variant="contained" color="primary" size="large">
-          Login
+        {error && (
+          <Typography color="error" textAlign="center">
+            {error}
+          </Typography>
+        )}
+        <Button type="submit" variant="contained" color="primary" size="large" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </Box>
     </Container>
