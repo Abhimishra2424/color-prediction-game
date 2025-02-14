@@ -17,20 +17,20 @@ import { MdOutlineSportsEsports, MdTimer } from "react-icons/md"; // Icons
 import { useRound } from "../context/RoundContext"; // Import the context
 
 function GameHome() {
-  const { currentRound, fetchCurrentRound } = useRound();
+  const { currentRound, gameHistory, fetchCurrentRound , getGameHistroy } = useRound();
 
   const now = new Date();
   const etime = new Date(currentRound?.end_time);
   const timeL = Math.floor((etime - now) / 1000);
 
   const [timeLeft, setTimeLeft] = useState(timeL);
-  const [gameHistory, setGameHistory] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage] = useState(5);
 
   // Fetch once on component mount
   useEffect(() => {
     fetchCurrentRound();
+    getGameHistroy()
   }, []);
 
   // Timer Countdown
@@ -47,18 +47,6 @@ function GameHome() {
 
     return () => clearInterval(interval);
   }, [currentRound]);
-
-  // Mock Game History Data
-  useEffect(() => {
-    setGameHistory(
-      Array.from({ length: 20 }, (_, index) => ({
-        round: index + 1,
-        color: ["Red", "Green", "Black", "Blue", "Orange", "Pink"][
-          Math.floor(Math.random() * 6)
-        ],
-      }))
-    );
-  }, []);
 
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center", mt: 3, pb: 8 }}>
@@ -136,15 +124,14 @@ function GameHome() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {gameHistory
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {gameHistory?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => (
-                  <TableRow key={row.round}>
+                  <TableRow key={row.round_no}>
                     <TableCell sx={{ textAlign: "center", fontSize: { xs: 12, md: 16 } }}>
-                      {row.round}
+                      {row?.round_no}
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", fontSize: { xs: 12, md: 16 } }}>
-                      {row.color}
+                    <TableCell sx={{ textAlign: "center", fontWeight:"bold", color: row?.winning_color, fontSize: { xs: 12, md: 16 } }}>
+                      {row?.winning_color}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -155,7 +142,7 @@ function GameHome() {
         {/* Pagination */}
         <TablePagination
           component="div"
-          count={gameHistory.length}
+          count={gameHistory?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(event, newPage) => setPage(newPage)}

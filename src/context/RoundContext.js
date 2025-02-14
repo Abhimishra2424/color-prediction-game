@@ -6,6 +6,8 @@ const RoundContext = createContext();
 
 export const RoundProvider = ({ children }) => {
   const [currentRound, setCurrentRound] = useState(null);
+  const [gameHistory, setGameHistory] = useState(null)
+
   const [isFetching, setIsFetching] = useState(false);
 
   const fetchCurrentRound = async () => {
@@ -45,9 +47,47 @@ export const RoundProvider = ({ children }) => {
     }
   };
 
+  const getGameHistroy = async () =>{
+    try {
+     
+      const response = await axios.get("http://localhost:5000/api/rounds/completed", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.data) {
+        setGameHistory(response.data); 
+      } else {
+        toast.warn("Invalid response format", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    } finally {
+      
+    }
+  }
+
   // Fetch once on component mount
   useEffect(() => {
     fetchCurrentRound();
+    getGameHistroy()
   }, []);
 
   // Poll every 5 seconds without an infinite loop
@@ -59,6 +99,7 @@ export const RoundProvider = ({ children }) => {
 
         if (now > endTime) {
           fetchCurrentRound(); // Fetch only when needed
+          getGameHistroy(); // Fetch only when needed
         }
       }
     }, 5000);
@@ -67,7 +108,7 @@ export const RoundProvider = ({ children }) => {
   }, [currentRound?.end_time]); // Depend only on `end_time`
 
   return (
-    <RoundContext.Provider value={{ currentRound, fetchCurrentRound }}>
+    <RoundContext.Provider value={{ currentRound, gameHistory, fetchCurrentRound , getGameHistroy }}>
       {children}
     </RoundContext.Provider>
   );

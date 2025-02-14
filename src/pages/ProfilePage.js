@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Box, Typography, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
-import { MdAttachMoney, MdOutlineLock, MdMoneyOff, MdAccountCircle, MdArrowBack, MdReceipt, MdCheckCircle, MdPeople, MdPlayCircle } from "react-icons/md"; // Icons
+import { MdAttachMoney, MdOutlineLock, MdMoneyOff, MdAccountCircle, MdReceipt, MdCheckCircle, MdPeople, MdPlayCircle } from "react-icons/md"; // Icons
 import { useUser } from "../context/UserContext";
 
 function ProfilePage() {
@@ -25,14 +25,32 @@ function ProfilePage() {
   ];
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4 }}>
+    <Container maxWidth="sm"
+      sx={{
+        height: "calc(100vh - 56px)", // Adjust for bottom navigation
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* Back Navigation */}
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+      {/* <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          p: 2,
+          position: "sticky",
+          top: 0,
+          bgcolor: "white",
+          zIndex: 10,
+          borderBottom: "1px solid #ddd",
+        }}
+      >
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
           <MdArrowBack size={28} />
         </Link>
-        <Typography variant="h6" sx={{ ml: 2, fontWeight: "bold" }}>Home</Typography>
-      </Box>
+        <Typography variant="h6" sx={{ ml: 2, fontWeight: "bold" }}>Back</Typography>
+      </Box> */}
+
 
       {/* User Info */}
       <Box
@@ -45,6 +63,7 @@ function ProfilePage() {
           color: "white",
           borderRadius: 2,
           mb: 2,
+          mt:5
         }}
       >
         <MdAccountCircle size={50} style={{ marginBottom: 8 }} />
@@ -54,8 +73,8 @@ function ProfilePage() {
         </Typography>
       </Box>
 
-      {/* Scrollable List */}
-      <Box sx={{ maxHeight: 300, overflowY: "auto", bgcolor: "white", borderRadius: 2, boxShadow: 2 }}>
+      {/* Scrollable Content */}
+      <Box sx={{ flex: 1, overflowY: "auto", p: 2, pb: 10 }}>
         <List>
           {userOptions.map((option, index) => (
             <React.Fragment key={index}>
