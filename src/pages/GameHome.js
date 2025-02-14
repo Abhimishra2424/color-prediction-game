@@ -18,10 +18,7 @@ import { useRound } from "../context/RoundContext"; // Import the context
 
 function GameHome() {
   const { currentRound } = useRound();
-
-  console.log('currentRound', currentRound)
   const [timeLeft, setTimeLeft] = useState(60);
-
   const [gameHistory, setGameHistory] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage] = useState(5);
