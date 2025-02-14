@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const RoundContext = createContext();
 
@@ -12,17 +13,33 @@ export const RoundProvider = ({ children }) => {
       setIsFetching(true); // Prevent duplicate API calls
       const response = await axios.get("http://localhost:5000/api/rounds/round", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       if (response.data && response.data.round_no) {
         setCurrentRound(response.data); // Set state with the object
       } else {
-        console.warn("Invalid response format:", response.data);
+        toast.warn("Invalid response format", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        });
       }
     } catch (error) {
-      console.error("Error fetching current round:", error);
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
     } finally {
       setIsFetching(false); // Reset flag
     }
@@ -33,25 +50,24 @@ export const RoundProvider = ({ children }) => {
     fetchCurrentRound();
   }, []);
 
+  // Poll every 5 seconds without an infinite loop
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isFetching && currentRound?.end_time) {
+        const endTime = new Date(currentRound.end_time).getTime();
+        const now = new Date().getTime();
 
-// Poll every 5 seconds without infinite loop
-useEffect(() => {
-  const interval = setInterval(() => {
-    if (!isFetching && currentRound?.end_time) {
-      const endTime = new Date(currentRound.end_time).getTime();
-      const now = new Date().getTime();
-
-      if (now > endTime) {
-        fetchCurrentRound(); // Fetch only when needed
+        if (now > endTime) {
+          fetchCurrentRound(); // Fetch only when needed
+        }
       }
-    }
-  }, 5000);
+    }, 5000);
 
-  return () => clearInterval(interval);
-}, [currentRound?.end_time]); // Depend only on `end_time`
+    return () => clearInterval(interval);
+  }, [currentRound?.end_time]); // Depend only on `end_time`
 
   return (
-    <RoundContext.Provider value={{ currentRound }}>
+    <RoundContext.Provider value={{ currentRound, fetchCurrentRound }}>
       {children}
     </RoundContext.Provider>
   );

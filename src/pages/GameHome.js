@@ -17,11 +17,21 @@ import { MdOutlineSportsEsports, MdTimer } from "react-icons/md"; // Icons
 import { useRound } from "../context/RoundContext"; // Import the context
 
 function GameHome() {
-  const { currentRound } = useRound();
-  const [timeLeft, setTimeLeft] = useState(60);
+  const { currentRound, fetchCurrentRound } = useRound();
+
+  const now = new Date();
+  const etime = new Date(currentRound?.end_time);
+  const timeL = Math.floor((etime - now) / 1000);
+
+  const [timeLeft, setTimeLeft] = useState(timeL);
   const [gameHistory, setGameHistory] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage] = useState(5);
+
+  // Fetch once on component mount
+  useEffect(() => {
+    fetchCurrentRound();
+  }, []);
 
   // Timer Countdown
   useEffect(() => {
@@ -73,7 +83,7 @@ function GameHome() {
           variant="h6"
           sx={{ display: "flex", alignItems: "center", fontSize: { xs: 16, md: 20 } }}
         >
-          <MdTimer size={24} style={{ marginRight: 8 }} /> {timeLeft}s
+          <MdTimer size={24} style={{ marginRight: 8 }} /> {timeLeft ? timeLeft : ""}s
         </Typography>
       </Box>
 

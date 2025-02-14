@@ -7,13 +7,12 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [loginUser, setLoginUser] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
-  const deCodeJwtValue = jwtDecode(localStorage.getItem("token") || null)
-
+  const deCodeJwtValue = localStorage.getItem("token") ? jwtDecode(localStorage.getItem("token") || null) : ""
 
   const fetchCurrentUserDetails = async (deCodeJwtValue) => {
     try {
       setIsFetching(true); // Prevent duplicate API calls
-      const response = await axios.get(`http://localhost:5000/api/users/${deCodeJwtValue.id}`);
+      const response = await axios.get(`http://localhost:5000/api/users/${deCodeJwtValue?.id}`);
       if (response.data) {
         setLoginUser(response.data.data); // Set state with the object
       } else {
