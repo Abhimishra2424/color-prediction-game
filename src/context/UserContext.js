@@ -45,7 +45,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ loginUser, isFetching, fetchCurrentUserDetails }}>
+    <UserContext.Provider value={{ loginUser, isFetching, setLoginUser, fetchCurrentUserDetails }}>
       {children}
     </UserContext.Provider>
   );
