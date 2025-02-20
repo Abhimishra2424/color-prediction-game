@@ -3,21 +3,65 @@ import { Container, Typography, Box, TextField, Button, Paper } from "@mui/mater
 import QRCode from "react-qr-code";
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useUser } from "../context/UserContext";
 
 function AddMoney() {
+  const { loginUser } = useUser(); // fetch user data
+
   const upiId = "user@upi";
   const [amount, setAmount] = useState("");
-  const [transactionId, setTransactionId] = useState("");
   const [transactionNumber, setTransactionNumber] = useState("");
   const [source, setSource] = useState("");
 
-  const handleSubmit = () => {
-    if (!amount || !transactionId || !transactionNumber || !source) {
-      alert("Please fill in all fields.");
+  const clearState = () =>{
+    setAmount("")
+    setTransactionNumber("")
+    setSource("")
+  }
+
+  const handleSubmit = async () => {
+    if (!amount || !transactionNumber || !source) {
+      toast.warn("Please fill in all fields.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
       return;
     }
-    console.log("Transaction Submitted:", { amount, transactionId, transactionNumber, source });
-    // Send details to backend for verification
+
+    try {
+      const payload = {
+        amount,
+        transaction_number: transactionNumber,
+        user_id: loginUser.id, // Use dynamic user_id if needed
+        source,
+      };
+
+      const response = await axios.post("http://localhost:5000/api/wallet/add-money", payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response?.data?.success) {
+        toast.success(response?.data?.data?.message, {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        clearState()
+      } else {
+        toast.error(response?.data?.message || "Something went wrong!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+      }
+    } catch (error) {
+      toast.error("Failed to add money. Try again later.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    }
   };
 
   return (
@@ -76,16 +120,6 @@ function AddMoney() {
             sx={{ mb: 2, bgcolor: "white" }}
           />
 
-          <Typography variant="body1" sx={{ fontWeight: "bold", mb: 1 }}>Enter Transaction ID</Typography>
-          <TextField
-            placeholder="Enter UPI Transaction ID"
-            fullWidth
-            variant="outlined"
-            value={transactionId}
-            onChange={(e) => setTransactionId(e.target.value)}
-            sx={{ mb: 2, bgcolor: "white" }}
-          />
-
           <Typography variant="body1" sx={{ fontWeight: "bold", mb: 1 }}>Enter Transaction Number</Typography>
           <TextField
             placeholder="Enter Transaction Number"
@@ -109,7 +143,7 @@ function AddMoney() {
       </Box>
 
       {/* Fixed Submit Button ABOVE Bottom Navigation */}
-      <Box sx={{ p: 2, bgcolor: "white", borderTop: "1px solid #ddd", bottom: 56}}>
+      <Box sx={{ p: 2, bgcolor: "white", borderTop: "1px solid #ddd", bottom: 56 }}>
         <Button
           variant="contained"
           color="primary"
@@ -120,7 +154,7 @@ function AddMoney() {
           Submit Transaction
         </Button>
       </Box>
-      
+
     </Container>
   );
 }

@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "./AuthContext";
 
 const RoundContext = createContext();
 
 export const RoundProvider = ({ children }) => {
+  const  {logoutUser}  = useAuth()
   const [currentRound, setCurrentRound] = useState(null);
   const [gameHistory, setGameHistory] = useState(null)
 
@@ -42,6 +44,10 @@ export const RoundProvider = ({ children }) => {
         draggable: true,
         theme: "light",
       });
+      if(error.response.data.message === `Forbidden: Invalid or expired token`){
+        logoutUser()
+      }
+      console.log('error.response.data.message', error.response.data.message)
     } finally {
       setIsFetching(false); // Reset flag
     }

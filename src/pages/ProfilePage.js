@@ -5,9 +5,7 @@ import { MdAttachMoney, MdOutlineLock, MdMoneyOff, MdAccountCircle, MdReceipt, M
 import { useUser } from "../context/UserContext";
 
 function ProfilePage() {
-  const { loginUser, isFetching } = useUser();
-
-  const totalAmount = 5000; // Replace with actual balance from backend
+  const { loginUser } = useUser();
 
   // Default User Options
   const userOptions = [
@@ -69,7 +67,7 @@ function ProfilePage() {
         <MdAccountCircle size={50} style={{ marginBottom: 8 }} />
         <Typography variant="h6">{loginUser?.username}</Typography>
         <Typography variant="body1" sx={{ mt: 1, fontWeight: "bold" }}>
-          Total Amount: ₹{totalAmount}
+          Total Amount: ₹{loginUser?.wallet?.balance}
         </Typography>
       </Box>
 
