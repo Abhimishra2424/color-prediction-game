@@ -6,7 +6,7 @@ import { useAuth } from "./AuthContext";
 const RoundContext = createContext();
 
 export const RoundProvider = ({ children }) => {
-  const  {logoutUser}  = useAuth()
+  const { logoutUser, loginUser } = useAuth()
   const [currentRound, setCurrentRound] = useState(null);
   const [gameHistory, setGameHistory] = useState(null)
 
@@ -44,7 +44,7 @@ export const RoundProvider = ({ children }) => {
         draggable: true,
         theme: "light",
       });
-      if(error.response.data.message === `Forbidden: Invalid or expired token`){
+      if (error.response.data.message === `Forbidden: Invalid or expired token`) {
         logoutUser()
       }
       console.log('error.response.data.message', error.response.data.message)
@@ -53,9 +53,9 @@ export const RoundProvider = ({ children }) => {
     }
   };
 
-  const getGameHistroy = async () =>{
+  const getGameHistroy = async () => {
     try {
-     
+
       const response = await axios.get("http://localhost:5000/api/rounds/completed", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -63,7 +63,7 @@ export const RoundProvider = ({ children }) => {
       });
 
       if (response.data) {
-        setGameHistory(response.data); 
+        setGameHistory(response.data);
       } else {
         toast.warn("Invalid response format", {
           position: "top-center",
@@ -86,14 +86,54 @@ export const RoundProvider = ({ children }) => {
         theme: "light",
       });
     } finally {
-      
+
+    }
+  }
+
+  const checkPetResult = async () => {
+
+    if(!localStorage.getItem("bet_id")) {
+      return
+    }
+
+    try {
+      let payload = {
+        user_id: loginUser?.id,
+        round_id: currentRound?.id,
+        bet_id: localStorage.getItem("bet_id")
+      }
+      const response = await axios.post("http://localhost:5000/api/bet/check-result", payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.data.success) {
+        toast.success(response.data.message, {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        //  reset bet_id
+        localStorage.removeItem("bet_id");
+      } else {
+        toast.error(response.data.message, {
+          position: "top-center",
+          autoClose: 2000,
+        });
+      }
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
   }
 
   // Fetch once on component mount
   useEffect(() => {
     fetchCurrentRound();
-    getGameHistroy()
+    getGameHistroy();
+    checkPetResult();
   }, []);
 
   // Poll every 5 seconds without an infinite loop
@@ -106,6 +146,7 @@ export const RoundProvider = ({ children }) => {
         if (now > endTime) {
           fetchCurrentRound(); // Fetch only when needed
           getGameHistroy(); // Fetch only when needed
+          checkPetResult(); // fetch only when needed
         }
       }
     }, 5000);
@@ -114,7 +155,7 @@ export const RoundProvider = ({ children }) => {
   }, [currentRound?.end_time]); // Depend only on `end_time`
 
   return (
-    <RoundContext.Provider value={{ currentRound, gameHistory, fetchCurrentRound , getGameHistroy }}>
+    <RoundContext.Provider value={{ currentRound, gameHistory, fetchCurrentRound, getGameHistroy }}>
       {children}
     </RoundContext.Provider>
   );
