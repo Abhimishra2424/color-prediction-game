@@ -6,6 +6,7 @@ import { useAuth } from "./AuthContext";
 const RoundContext = createContext();
 
 export const RoundProvider = ({ children }) => {
+  
   const { logoutUser, loginUser } = useAuth()
   const [currentRound, setCurrentRound] = useState(null);
   const [gameHistory, setGameHistory] = useState(null)

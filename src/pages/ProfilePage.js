@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Box, Typography, List, ListItem, ListItemIcon, ListItemText, Divider, Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { MdAttachMoney, MdOutlineLock, MdMoneyOff, MdAccountCircle, MdReceipt, MdCheckCircle, MdPeople, MdPlayCircle, MdLogout } from "react-icons/md";
 import { useUser } from "../context/UserContext";
+import { useTransaction } from "../context/TransactionContext";
 
 function ProfilePage() {
-  const { loginUser, setLoginUser } = useUser();
+  const { loginUser, setLoginUser, fetchCurrentUserDetails } = useUser();
+    const { fetchTransactions } = useTransaction();
   const navigate = useNavigate();
 
-  console.log("loginUser", loginUser);
+  useEffect(() => {
+    fetchTransactions();
+    fetchCurrentUserDetails()
+  }, []);
 
   // Default User Options
   const userOptions = [
