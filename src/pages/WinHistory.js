@@ -31,14 +31,13 @@ function WinHistory() {
 
         if (response.data.success) {
           const { bets } = response.data;
-          console.log('bets', bets)
           setHistoryData(
             bets.map((bet) => ({
               roundNo: bet.round.round_no,
               betColor: bet.bet_color,
               winningColor: bet.round.winning_color,
-              amount: bet.amount || 0,
-              betAmount: bet.bet_amount,
+              betAmount: parseFloat(bet.bet_amount),
+              winningAmount: bet.bet_type === "win" ? parseFloat(bet.bet_amount) * 2 : 0, // If "win", double the amount
             }))
           );
 
@@ -66,7 +65,7 @@ function WinHistory() {
     <Container
       maxWidth="sm"
       sx={{
-        height: "calc(100vh - 56px)", 
+        height: "calc(100vh - 56px)",
         display: "flex",
         flexDirection: "column",
       }}
@@ -129,7 +128,7 @@ function WinHistory() {
                           <strong>Bet Amount:</strong> ₹{row.betAmount.toLocaleString()}
                         </Typography>
                         <Typography variant="body2">
-                          <strong>Winning Amount:</strong> ₹{row.amount.toLocaleString()}
+                          <strong>Winning Amount:</strong> ₹{row.winningAmount.toLocaleString()}
                         </Typography>
                       </>
                     }
