@@ -1,6 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./routes/PrivateRoute";
+
+import { AuthProvider } from "./context/AuthContext";
+import { RoundProvider } from "./context/RoundContext";
+import { UserProvider } from "./context/UserContext";
+import { TransactionProvider } from "./context/TransactionContext";
+import { ToastContainer } from 'react-toastify';
+
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -11,12 +18,8 @@ import AddMoney from "./pages/AddMoney";
 import Withdraw from "./pages/Withdraw";
 import UpdatePassword from "./pages/UpdatePassword";
 import Transaction from "./pages/Transactions";
-import { AuthProvider } from "./context/AuthContext";
-import { RoundProvider } from "./context/RoundContext";
-import { UserProvider } from "./context/UserContext";
-import { TransactionProvider } from "./context/TransactionContext";
+import Approve from "./pages/Approve";
 
-import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   return (
@@ -40,6 +43,7 @@ const App = () => {
                     <Route path="/withdraw" element={<PrivateRoute><Withdraw /></PrivateRoute>} />
                     <Route path="/update-password" element={<PrivateRoute><UpdatePassword /></PrivateRoute>} />
                     <Route path="/transactions" element={<PrivateRoute><Transaction /></PrivateRoute>} />
+                    <Route path="/approve" element={<PrivateRoute><Approve /></PrivateRoute>} />
                   </Route>
                 </Routes>
               </Router>

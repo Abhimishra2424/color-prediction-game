@@ -57,7 +57,7 @@ function AddMoney() {
         });
       }
     } catch (error) {
-      toast.error("Failed to add money. Try again later.", {
+      toast.error(error.response.data.message || "Failed to add money. Try again later.", {
         position: "top-center",
         autoClose: 2000,
       });
