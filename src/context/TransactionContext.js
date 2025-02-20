@@ -10,14 +10,22 @@ export const TransactionProvider = ({ children }) => {
     const fetchTransactions = async () => {
         if (isFetching) return; // Prevent multiple calls
 
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.error("No token found! Redirecting to login...");
+            return;
+        }
+
         try {
             setIsFetching(true);
 
-            const response = await axios.post("http://localhost:5000/api/transactions/get", {}, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
+            const response = await axios.post(
+                "http://localhost:5000/api/transactions/get",
+                {}, // Keep it only if required by API
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
 
             if (response.data?.transactions) {
                 setTransactions(response.data.transactions);
@@ -35,7 +43,7 @@ export const TransactionProvider = ({ children }) => {
 
     useEffect(() => {
         fetchTransactions(); // Call only once on mount
-    }, []); // Empty dependency array prevents infinite loops
+    }, []);
 
     return (
         <TransactionContext.Provider value={{ transactions, isFetching, fetchTransactions }}>

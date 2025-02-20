@@ -6,6 +6,7 @@ import { useUser } from "../context/UserContext";
 
 function ProfilePage() {
   const { loginUser } = useUser();
+  console.log('loginUser', loginUser)
 
   // Default User Options
   const userOptions = [

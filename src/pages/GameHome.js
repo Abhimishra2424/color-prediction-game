@@ -16,10 +16,12 @@ import {
 import { MdOutlineSportsEsports, MdTimer } from "react-icons/md"; // Icons
 import { useRound } from "../context/RoundContext"; // Import the context
 import { useTransaction } from "../context/TransactionContext";
+import { useUser } from "../context/UserContext";
 
 function GameHome() {
   const { currentRound, gameHistory, fetchCurrentRound , getGameHistroy } = useRound();
   const {  fetchTransactions } = useTransaction();
+  const {  fetchCurrentUserDetails } = useUser();
 
 
   const now = new Date();
@@ -35,6 +37,7 @@ function GameHome() {
     fetchCurrentRound();
     getGameHistroy()
     fetchTransactions()
+    fetchCurrentUserDetails()
   }, []);
 
   // Timer Countdown
