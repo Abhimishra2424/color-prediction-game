@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { API_URL } from "../path";
 
 const TransactionContext = createContext();
 
@@ -20,7 +21,7 @@ export const TransactionProvider = ({ children }) => {
             setIsFetching(true);
 
             const response = await axios.post(
-                "http://localhost:5000/api/transactions/get",
+                `${API_URL}/api/transactions/get`,
                 {}, // Keep it only if required by API
                 {
                     headers: { Authorization: `Bearer ${token}` },

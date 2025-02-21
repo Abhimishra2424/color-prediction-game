@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "./AuthContext";
+import { API_URL } from "../path";
 
 const RoundContext = createContext();
 
@@ -16,7 +17,7 @@ export const RoundProvider = ({ children }) => {
   const fetchCurrentRound = async () => {
     try {
       setIsFetching(true); // Prevent duplicate API calls
-      const response = await axios.get("http://localhost:5000/api/rounds/round", {
+      const response = await axios.get(`${API_URL}/api/rounds/round`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -57,7 +58,7 @@ export const RoundProvider = ({ children }) => {
   const getGameHistroy = async () => {
     try {
 
-      const response = await axios.get("http://localhost:5000/api/rounds/completed", {
+      const response = await axios.get(`${API_URL}/api/rounds/completed`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -103,7 +104,7 @@ export const RoundProvider = ({ children }) => {
         round_id: currentRound?.id,
         bet_id: localStorage.getItem("bet_id")
       }
-      const response = await axios.post("http://localhost:5000/api/bet/check-result", payload, {
+      const response = await axios.post(`${API_URL}/api/bet/check-result`, payload, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

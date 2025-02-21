@@ -13,6 +13,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+import { API_URL } from "../path";
 
 function WinHistory() {
   const [historyData, setHistoryData] = useState([]);
@@ -25,7 +26,7 @@ function WinHistory() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/bet/get-all-bets", {
+        const response = await axios.get(`${API_URL}/api/bet/get-all-bets`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 

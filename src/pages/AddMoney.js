@@ -6,6 +6,7 @@ import { MdArrowBack } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useUser } from "../context/UserContext";
+import { API_URL } from "../path";
 
 function AddMoney() {
   const { loginUser } = useUser(); // fetch user data
@@ -38,7 +39,7 @@ function AddMoney() {
         source,
       };
 
-      const response = await axios.post("http://localhost:5000/api/wallet/add-money", payload, {
+      const response = await axios.post(`${API_URL}/api/wallet/add-money`, payload, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

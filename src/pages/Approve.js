@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_URL } from "../path";
 
 const Approve = () => {
     const isMobile = useMediaQuery("(max-width:600px)");
@@ -28,7 +29,7 @@ const Approve = () => {
             return;
         }
         try {
-            const response = await axios.get("http://localhost:5000/api/transactions/admin/all", {
+            const response = await axios.get(`${API_URL}/api/transactions/admin/all`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setTransactions(response.data.transactions || []);
@@ -49,8 +50,8 @@ const Approve = () => {
     const handleAction = async (id, action) => {
         try {
             const url = action === "Approved"
-                ? "http://localhost:5000/api/wallet/admin/approve-money"
-                : "http://localhost:5000/api/wallet/admin/reject-money";
+                ? `${API_URL}/api/wallet/admin/approve-money`
+                : `${API_URL}/api/wallet/admin/reject-money`;
     
             const response = await axios.post(
                 url,

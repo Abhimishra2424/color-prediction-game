@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { API_URL } from "../path";
 
 const UserContext = createContext();
 
@@ -20,7 +21,7 @@ export const UserProvider = ({ children }) => {
     try {
       setIsFetching(true); // Prevent duplicate API calls
 
-      const response = await axios.get("http://localhost:5000/api/users/get", {
+      const response = await axios.get(`${API_URL}/api/users/get`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

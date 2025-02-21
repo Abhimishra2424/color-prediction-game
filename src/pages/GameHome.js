@@ -22,6 +22,7 @@ import { useTransaction } from "../context/TransactionContext";
 import { useUser } from "../context/UserContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_URL } from "../path";
 
 function GameHome() {
   const { currentRound, gameHistory, fetchCurrentRound, getGameHistroy } = useRound();
@@ -97,7 +98,7 @@ function GameHome() {
       bet_amount: betAmount,
     };
     try {
-      const response = await axios.post("http://localhost:5000/api/bet/place-bet", payload, {
+      const response = await axios.post(`${API_URL}/api/bet/place-bet`, payload, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
