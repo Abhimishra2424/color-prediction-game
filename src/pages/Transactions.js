@@ -44,7 +44,7 @@ function Transactions() {
       </Paper>
 
       {/* Transactions List */}
-      <Box sx={{ flex: 1, overflowY: "auto", p: 2, bgcolor: "#f9f9f9", borderRadius: 2 }}>
+      <Box sx={{ flex: 1, overflowY: "auto", padding: 2, bgcolor: "#f9f9f9", borderRadius: 2 , paddingBottom: 5}}>
         {isFetching ? (
           <Box display="flex" justifyContent="center" mt={3}>
             <CircularProgress />
